@@ -1,8 +1,8 @@
 .DS_Store
-
-# wrangler files
-.wrangler
-.dev.vars*
-!.dev.vars.example
-.env*
-!.env.example
+# segredos e arquivos gerados: nunca vão para o GitHub (repositório público)
+.dev.vars
+.senha-admin
+dist/
+node_modules/
+.wrangler/
+dados-seed.json

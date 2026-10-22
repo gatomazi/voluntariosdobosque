@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel do Catálogo</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1d4d2b" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12301b" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-in">
+    <svg class="arvore" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="24" r="17" class="copa"/>
+      <circle cx="19" cy="29" r="10" class="copa"/>
+      <circle cx="45" cy="29" r="10" class="copa"/>
+      <path d="M32 58V30M32 40l-8-8M32 36l9-9M32 58c-4 0-9 2-12 4M32 58c4 0 9 2 12 4" class="tronco"/>
+    </svg>
+    <div class="topo-txt">
+      <h1>Painel do catálogo</h1>
+      <p class="onde">Incluir, corrigir e remover contatos</p>
+    </div>
+    <div class="topo-links">
+      <a class="topo-link" href="/" target="_blank" rel="noopener">Ver o site</a>
+      <button class="topo-link" type="button" id="sair" hidden>Sair</button>
+    </div>
+  </div>
+</header>
+
+<main class="conteudo">
+  <section class="entrar" id="entrar" hidden>
+    <form class="cartao-form" id="form-entrar" novalidate>
+      <h2>Entrar</h2>
+      <label class="campo">
+        <span>Senha da admin</span>
+        <input id="senha" type="password" autocomplete="current-password" required>
+      </label>
+      <p class="erro" id="erro-entrar" role="alert" hidden></p>
+      <button class="btn btn-principal" type="submit" id="btn-entrar">Entrar</button>
+    </form>
+  </section>
+
+  <section id="painel" hidden>
+    <div class="painel-barra">
+      <label class="busca">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="q" type="search" placeholder="Buscar contato" autocomplete="off" aria-label="Buscar contato">
+      </label>
+      <button class="btn btn-principal" type="button" id="novo">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Novo
+      </button>
+    </div>
+    <p class="resultado-cab" id="contagem"></p>
+    <ul class="pessoas caixa" id="lista"></ul>
+  </section>
+
+  <p class="resultado-cab" id="carregando">Carregando…</p>
+</main>
+
+<dialog class="folha editor" id="editor" aria-labelledby="editor-titulo">
+  <form id="form-contato" novalidate>
+    <div class="folha-topo">
+      <div class="folha-quem"><h2 id="editor-titulo" tabindex="-1" autofocus>Novo contato</h2></div>
+      <button class="ic" type="button" data-fechar aria-label="Fechar sem salvar">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="folha-corpo">
+      <label class="campo">
+        <span>Nome</span>
+        <input id="f-nome" maxlength="80" autocomplete="off" required placeholder="Ex.: Pets do Bosque ou Maria">
+      </label>
+      <label class="campo">
+        <span>Detalhe <em>opcional</em></span>
+        <input id="f-detalhe" maxlength="80" autocomplete="off" placeholder="Quem atende ou especialidade">
+      </label>
+
+      <fieldset class="campo">
+        <legend>Telefones</legend>
+        <div class="fones" id="f-fones"></div>
+        <button class="link-btn" type="button" id="f-mais-fone">+ Outro número</button>
+      </fieldset>
+
+      <fieldset class="campo">
+        <legend>Categorias</legend>
+        <div class="escolhidas" id="f-escolhidas"></div>
+        <input id="f-busca-cat" type="search" autocomplete="off" placeholder="Buscar ou criar categoria" aria-label="Buscar ou criar categoria">
+        <div class="opcoes-cat" id="f-opcoes"></div>
+        <div class="nova-cat" id="f-nova" hidden>
+          <p>Nova categoria <strong id="f-nova-nome"></strong>. Em que tipo ela entra?</p>
+          <select id="f-nova-grupo" aria-label="Tipo da nova categoria"></select>
+          <button class="btn btn-fone" type="button" id="f-criar">Criar e escolher</button>
+        </div>
+      </fieldset>
+
+      <label class="marcar">
+        <input type="checkbox" id="f-confirmar">
+        <span>Número incompleto, a confirmar <em>(aparece sem os botões de WhatsApp e Ligar)</em></span>
+      </label>
+
+      <p class="erro" id="f-erro" role="alert" hidden></p>
+
+      <div class="editor-acoes">
+        <button class="btn btn-principal" type="submit" id="f-salvar">Salvar</button>
+        <button class="btn btn-perigo" type="button" id="f-excluir" hidden>Excluir contato</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<div class="aviso" id="aviso" role="status" hidden></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

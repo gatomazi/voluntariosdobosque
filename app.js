@@ -1,9 +1,11 @@
 (function () {
   "use strict";
 
-  const CONTATOS = window.CONTATOS || [];
-  const CATEGORIAS = window.CATEGORIAS || {};
-  const GRUPOS = window.GRUPOS || [];
+  // Os contatos vêm da API (editados em /admin). contatos.js fica como reserva se a API falhar.
+  let CONTATOS = [];
+  let CATEGORIAS = {};
+  let GRUPOS = [];
+  let ATUALIZADO_EM = "";
   const UTILIDADES = window.UTILIDADES || [];
   const VOLUNTARIOS = window.VOLUNTARIOS || null;
   const MSG_ZAP = "Olá! Peguei seu contato no catálogo do Bosque da Mata e BR Felice.";
@@ -71,20 +73,40 @@
   }
 
   // ---------- dados ----------
-  CONTATOS.forEach((c, i) => {
-    c.id = i;
-    c.chave = c.n + "|" + c.t[0];
-    c.busca = norm([c.n, c.d || "", c.c.join(" ")].join(" "));
-    c.digitos = c.t.join(" ");
-  });
+  let porId = new Map();
+  let porCategoria = {};
+  let grupos = [];
 
-  const porCategoria = {};
-  CONTATOS.forEach((c) => c.c.forEach((cat) => (porCategoria[cat] = porCategoria[cat] || []).push(c)));
-  Object.values(porCategoria).forEach((lista) => lista.sort((a, b) => coll.compare(a.n, b.n)));
-  const grupos = GRUPOS.map((g) => ({
-    ...g,
-    cats: Object.keys(porCategoria).filter((cat) => CATEGORIAS[cat] === g.id).sort(coll.compare),
-  })).filter((g) => g.cats.length);
+  function preparar(d) {
+    CONTATOS = (d.contatos || []).map((c) => ({ ...c, id: String(c.id || c.t[0]) }));
+    CATEGORIAS = d.categorias || {};
+    GRUPOS = d.grupos || [];
+    ATUALIZADO_EM = d.atualizadoEm || "";
+    CONTATOS.forEach((c) => {
+      c.chave = c.id;
+      c.busca = norm([c.n, c.d || "", c.c.join(" ")].join(" "));
+      c.digitos = c.t.join(" ");
+    });
+    porId = new Map(CONTATOS.map((c) => [c.id, c]));
+    porCategoria = {};
+    CONTATOS.forEach((c) => c.c.forEach((cat) => (porCategoria[cat] = porCategoria[cat] || []).push(c)));
+    Object.values(porCategoria).forEach((lista) => lista.sort((a, b) => coll.compare(a.n, b.n)));
+    grupos = GRUPOS.map((g) => ({
+      ...g,
+      cats: Object.keys(porCategoria).filter((cat) => CATEGORIAS[cat] === g.id).sort(coll.compare),
+    })).filter((g) => g.cats.length);
+  }
+
+  async function carregar() {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 4000);
+      const r = await fetch("/api/contatos", { signal: ctrl.signal, cache: "no-store" });
+      clearTimeout(t);
+      if (r.ok) return await r.json();
+    } catch (e) {}
+    return { contatos: window.CONTATOS || [], categorias: window.CATEGORIAS || {}, grupos: window.GRUPOS || [], atualizadoEm: window.ATUALIZADO_EM };
+  }
 
   UTILIDADES.forEach((u) => { u.busca = norm([u.n, u.d, "utilidade publica prefeitura cidade"].join(" ")); u.digitos = u.t.replace(/\D/g, ""); });
 
@@ -110,7 +132,10 @@
 
   // ---------- salvos ----------
   let salvos = new Set();
-  try { salvos = new Set(JSON.parse(localStorage.getItem(CHAVE_SALVOS) || "[]")); } catch (e) {}
+  try {
+    // versões antigas guardavam "nome|telefone"; o id de quem já estava na lista é o telefone
+    salvos = new Set(JSON.parse(localStorage.getItem(CHAVE_SALVOS) || "[]").map((k) => String(k).split("|").pop()));
+  } catch (e) {}
   function gravarSalvos() {
     try { localStorage.setItem(CHAVE_SALVOS, JSON.stringify([...salvos])); } catch (e) {}
   }
@@ -275,13 +300,13 @@
       estado.salvos = false; renderAtalhos(); render(); return;
     }
     const b = e.target.closest("button.quem");
-    if (b) abrirFolha(CONTATOS[b.closest(".pessoa").dataset.id]);
+    if (b) abrirFolha(porId.get(b.closest(".pessoa").dataset.id));
   });
 
   el.folhaCorpo.addEventListener("click", (e) => {
     const b = e.target.closest("[data-a]");
     if (!b || !el.folhaCorpo.dataset.id) return;
-    const c = CONTATOS[el.folhaCorpo.dataset.id];
+    const c = porId.get(el.folhaCorpo.dataset.id);
     const a = b.dataset.a;
     if (a === "copiar") copiar(formatar(c.t[b.dataset.i]), "Número copiado");
     if (a === "agenda") vcard(c);
@@ -315,7 +340,7 @@
     el.folhaCorpo.innerHTML = `<div class="sobre">
       <p>Contatos exclusivamente de empreendedores residentes no BR Felice e no Bosque da Mata.</p>
       <p><strong>Quer entrar no catálogo ou corrigir seu número?</strong> Mande no grupo do bairro.</p>
-      <p class="sobre-data">${CONTATOS.length} contatos · lista de ${esc(window.ATUALIZADO_EM || "")}</p>
+      <p class="sobre-data">${CONTATOS.length} contatos · lista de ${esc(ATUALIZADO_EM)}</p>
     </div>
     ${VOLUNTARIOS ? `<div class="sobre-vol">
       <p class="vol-titulo">Uma iniciativa dos Voluntários do Bosque da Mata</p>
@@ -328,21 +353,25 @@
   $("#topo-links").addEventListener("click", (e) => { if (e.target.closest("[data-sobre]")) abrirSobre(); });
 
   // ---------- início ----------
-  const totalFones = CONTATOS.reduce((s, c) => s + c.t.length, 0);
-  el.atualizado.textContent = `${CONTATOS.length} contatos · ${totalFones} telefones · lista de ${window.ATUALIZADO_EM || ""}`;
+  async function iniciar() {
+    preparar(await carregar());
+    const totalFones = CONTATOS.reduce((s, c) => s + c.t.length, 0);
+    el.atualizado.textContent = `${CONTATOS.length} contatos · ${totalFones} telefones · atualizado em ${ATUALIZADO_EM}`;
 
-  // link direto para uma categoria (#c-eletrica-eletricista) já abre ela
-  const hash = decodeURIComponent(location.hash.slice(1));
-  Object.keys(porCategoria).forEach((cat) => { if (slug(cat) === hash) abertas.add(cat); });
+    // link direto para uma categoria (#c-eletrica-eletricista) já abre ela
+    const hash = decodeURIComponent(location.hash.slice(1));
+    Object.keys(porCategoria).forEach((cat) => { if (slug(cat) === hash) abertas.add(cat); });
 
-  // ?q=pintor abre já com a busca feita
-  const qInicial = new URLSearchParams(location.search).get("q");
-  if (qInicial) { el.q.value = qInicial; estado.q = qInicial.trim(); el.limpar.hidden = false; }
+    // ?q=pintor abre já com a busca feita
+    const qInicial = new URLSearchParams(location.search).get("q");
+    if (qInicial) { el.q.value = qInicial; estado.q = qInicial.trim(); el.limpar.hidden = false; }
 
-  renderAtalhos();
-  render();
-  if (hash) {
-    const alvo = document.getElementById(hash);
-    if (alvo) alvo.scrollIntoView({ block: "start" });
+    renderAtalhos();
+    render();
+    if (hash) {
+      const alvo = document.getElementById(hash);
+      if (alvo) alvo.scrollIntoView({ block: "start" });
+    }
   }
+  iniciar();
 })();

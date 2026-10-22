@@ -1,0 +1,65 @@
+/* Painel da admin: usa os tokens e componentes de styles.css; aqui só o que é de formulário. */
+:root { --perigo: #b42318; --perigo-bg: #fde8e6; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --perigo: #ff8a7a; --perigo-bg: #3d1a16; }
+}
+:root[data-theme="dark"] { --perigo: #ff8a7a; --perigo-bg: #3d1a16; }
+
+.conteudo { padding-top: var(--e5); }
+
+/* entrar */
+.cartao-form {
+  display: grid; gap: var(--e4); max-width: 420px; margin: var(--e5) auto 0;
+  padding: var(--e5); background: var(--cartao); border-radius: var(--raio);
+  box-shadow: 0 1px 2px rgb(20 40 25 / .06), 0 4px 14px rgb(20 40 25 / .05);
+}
+.cartao-form h2 { margin: 0; font: 800 24px/1.1 var(--f-titulo); letter-spacing: -.02em; }
+
+/* campos */
+.campo { display: grid; gap: var(--e2); border: 0; margin: 0; padding: 0; min-width: 0; }
+.campo > span, .campo > legend { font-weight: 700; font-size: 15px; padding: 0; }
+.campo em, .marcar em { font-style: normal; font-weight: 400; color: var(--tinta-2); }
+.campo input, .campo select, .fone-linha input {
+  width: 100%; height: 50px; padding: 0 var(--e4); border-radius: 12px;
+  border: 1.5px solid var(--linha); background: var(--cartao); color: var(--tinta); font: inherit; font-size: 17px;
+}
+.campo input:focus, .campo select:focus, .fone-linha input:focus { outline: none; border-color: var(--zap); }
+.fones { display: grid; gap: var(--e2); }
+.fone-linha { display: flex; gap: var(--e2); align-items: center; }
+.fone-linha input { flex: 1; min-width: 0; font-variant-numeric: tabular-nums; }
+.link-btn { justify-self: start; border: 0; background: none; color: var(--zap); font-weight: 700; padding: var(--e2) 0; }
+
+.escolhidas, .opcoes-cat { display: flex; flex-wrap: wrap; gap: var(--e2); }
+.escolhidas:empty::before { content: "Nenhuma categoria escolhida"; color: var(--tinta-2); font-size: 15px; }
+.cat-chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 var(--e3);
+  border-radius: 999px; border: 1.5px solid var(--linha); background: var(--cartao); color: var(--tinta); font-size: 15px;
+}
+.cat-chip svg { width: 16px; height: 16px; }
+.escolhidas .cat-chip { background: var(--zap-bg); border-color: transparent; color: var(--zap); font-weight: 700; }
+.opcoes-cat .cat-chip small { color: var(--tinta-2); }
+.cat-chip.criar { border-style: dashed; color: var(--zap); font-weight: 700; }
+.nova-cat { display: grid; gap: var(--e2); padding: var(--e3); border-radius: 12px; background: var(--aberto); }
+.nova-cat p { margin: 0; font-size: 15px; }
+
+.marcar { display: flex; gap: var(--e3); align-items: flex-start; font-size: 16px; }
+.marcar input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--zap); flex: none; }
+
+.erro { margin: 0; padding: var(--e3); border-radius: 10px; background: var(--perigo-bg); color: var(--perigo); font-size: 15px; }
+
+.btn-principal { background: var(--zap); color: var(--cartao); }
+.btn-perigo { background: transparent; color: var(--perigo); }
+.btn-perigo.armado { background: var(--perigo); color: var(--cartao); }
+.btn[disabled] { opacity: .6; }
+.editor-acoes { display: grid; gap: var(--e2); padding-top: var(--e2); }
+
+/* painel */
+.painel-barra { display: flex; gap: var(--e2); align-items: center; }
+.painel-barra .busca { flex: 1; min-width: 0; }
+.painel-barra .btn { flex: none; }
+#lista .quem { cursor: pointer; }
+.cats-linha { font-size: 14px; color: var(--tinta-2); }
+
+.editor { max-height: 94vh; max-height: 94dvh; }
+.editor .folha-topo { position: sticky; top: 0; z-index: 1; background: var(--cartao); border-bottom: 1px solid var(--linha); padding-bottom: var(--e3); }
+.editor .folha-corpo { padding-top: var(--e4); gap: var(--e5); }

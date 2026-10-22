@@ -1,11 +1,7 @@
+// Cloudflare Pages: site estático (dist/) + Functions (functions/) + KV com os contatos
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "voluntariosdobosque",
-  "compatibility_date": "2026-10-19",
-  "observability": {
-    "enabled": true
-  },
-  "assets": {
-    "directory": "."
-  }
+  "pages_build_output_dir": "dist",
+  "compatibility_date": "2026-10-01",
+  "kv_namespaces": [{ "binding": "CATALOGO", "id": "7d3be90da84a4633ada0f801e581ae6b" }]
 }
