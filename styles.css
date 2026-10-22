@@ -69,7 +69,7 @@ a { color: inherit; }
 .topo-in {
   max-width: var(--largura); margin: 0 auto;
   padding-block: var(--e4) var(--e5); padding-left: var(--gutter-l); padding-right: var(--gutter-r);
-  display: flex; align-items: center; gap: var(--e3);
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--e3);
 }
 .arvore { width: 44px; height: 44px; }
 .arvore .copa { fill: var(--broto); stroke: none; }
@@ -77,6 +77,14 @@ a { color: inherit; }
 .topo-txt { flex: 1; min-width: 0; }
 h1 { margin: 0; font: 800 26px/1.05 var(--f-titulo); letter-spacing: -.02em; text-wrap: balance; }
 .onde { margin: var(--e1) 0 0; font-size: 14px; color: var(--mata-tx-2); }
+.topo-links { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: var(--e2); }
+.topo-link {
+  display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 var(--e3) 0 10px;
+  border-radius: 999px; border: 0; background: rgb(255 255 255 / .12); color: var(--mata-tx);
+  font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap;
+}
+.topo-link svg { width: 18px; height: 18px; color: var(--mata-tx-2); }
+.topo-link:active { background: rgb(255 255 255 / .2); }
 
 /* ---------- busca fixa ---------- */
 .barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--papel); }
@@ -177,9 +185,11 @@ h1 { margin: 0; font: 800 26px/1.05 var(--f-titulo); letter-spacing: -.02em; tex
 .dica { margin: var(--e2) var(--e1) 0; font-size: 14px; color: var(--tinta-2); }
 
 /* ---------- rodapé ---------- */
-.voluntarios {
-  display: grid; justify-items: center; gap: var(--e3);
-  padding-block: var(--e6) var(--e5); margin-bottom: var(--e5); border-bottom: 1px solid var(--linha);
+.sobre p { margin: 0 0 var(--e3); font-size: 17px; }
+.sobre-data { color: var(--tinta-2); font-size: 15px !important; }
+.sobre-vol {
+  display: grid; justify-items: center; gap: var(--e3); text-align: center;
+  padding: var(--e5) var(--e4); border-radius: var(--raio); background: var(--aberto);
 }
 .vol-titulo { margin: 0; font: 600 18px/1.3 var(--f-titulo); color: var(--tinta); }
 .vol-link {
@@ -188,7 +198,7 @@ h1 { margin: 0; font: 800 26px/1.05 var(--f-titulo); letter-spacing: -.02em; tex
 }
 .vol-outros { color: var(--tinta-2); font-size: 15px; text-underline-offset: 3px; }
 .rodape {
-  max-width: var(--largura); margin: 0 auto; padding-block: 0 var(--e7);
+  max-width: var(--largura); margin: 0 auto; padding-block: var(--e2) var(--e7);
   padding-left: var(--gutter-l); padding-right: var(--gutter-r);
   font-size: 14px; color: var(--tinta-2); text-align: center; text-wrap: balance;
 }
@@ -245,6 +255,7 @@ h1 { margin: 0; font: 800 26px/1.05 var(--f-titulo); letter-spacing: -.02em; tex
 }
 
 @media (hover: hover) {
+  .topo-link:hover { background: rgb(255 255 255 / .2); }
   .cat > summary:hover, .acao:hover { background: var(--aberto); }
   .atalho:hover { background: var(--neutro-bg); }
 }

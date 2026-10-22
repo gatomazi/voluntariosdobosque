@@ -25,6 +25,7 @@
     enviar: '<svg viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>',
     insta: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>',
     cidade: '<svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg>',
+    info: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>',
     seta: '<svg class="seta" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>',
   };
 
@@ -101,7 +102,7 @@
   function htmlCidade() {
     if (!UTILIDADES.length) return "";
     return `<section class="grupo cidade" id="g-cidade" aria-labelledby="t-cidade">
-      <div class="grupo-cab"><h2 id="t-cidade">Serviços da cidade</h2></div>
+      <div class="grupo-cab"><h2 id="t-cidade">Utilidade pública</h2></div>
       <ul class="pessoas caixa">${UTILIDADES.map(htmlUtilidade).join("")}</ul>
       <p class="dica">O WhatsApp já abre com uma mensagem pronta. É só completar com seu nome e endereço.</p>
     </section>`;
@@ -191,7 +192,7 @@
     const salvosBtn = salvos.size || estado.salvos
       ? `<button class="atalho atalho-salvos" type="button" data-salvos aria-pressed="${estado.salvos}">${IC.estrela}Salvos · ${salvos.size}</button>`
       : "";
-    const cidadeBtn = UTILIDADES.length ? `<button class="atalho" type="button" data-grupo="cidade">${IC.cidade}Cidade</button>` : "";
+    const cidadeBtn = UTILIDADES.length ? `<button class="atalho" type="button" data-grupo="cidade">${IC.cidade}Utilidade pública</button>` : "";
     el.atalhos.innerHTML = salvosBtn + cidadeBtn + grupos.map((g) => `<button class="atalho" type="button" data-grupo="${g.id}">${esc(g.nome)}</button>`).join("");
   }
 
@@ -279,7 +280,7 @@
 
   el.folhaCorpo.addEventListener("click", (e) => {
     const b = e.target.closest("[data-a]");
-    if (!b) return;
+    if (!b || !el.folhaCorpo.dataset.id) return;
     const c = CONTATOS[el.folhaCorpo.dataset.id];
     const a = b.dataset.a;
     if (a === "copiar") copiar(formatar(c.t[b.dataset.i]), "Número copiado");
@@ -303,11 +304,28 @@
     compartilhar({ title: "Catálogo do bairro", text: texto, url }, texto);
   });
 
-  if (VOLUNTARIOS) {
-    $("#voluntarios").innerHTML = `<p class="vol-titulo">Uma iniciativa dos Voluntários do Bosque da Mata</p>
+  // ---------- sobre ----------
+  $("#topo-links").innerHTML =
+    `<button class="topo-link" type="button" data-sobre>${IC.info}Sobre o catálogo</button>` +
+    (VOLUNTARIOS ? `<a class="topo-link" href="${esc(VOLUNTARIOS.instagram)}" target="_blank" rel="noopener">${IC.insta}Instagram</a>` : "");
+
+  function abrirSobre() {
+    el.folhaNome.textContent = "Sobre o catálogo";
+    el.folhaSub.textContent = "Bosque da Mata e BR Felice · Tijucas/SC";
+    el.folhaCorpo.innerHTML = `<div class="sobre">
+      <p>Contatos exclusivamente de empreendedores residentes no BR Felice e no Bosque da Mata.</p>
+      <p><strong>Quer entrar no catálogo ou corrigir seu número?</strong> Mande no grupo do bairro.</p>
+      <p class="sobre-data">${CONTATOS.length} contatos · lista de ${esc(window.ATUALIZADO_EM || "")}</p>
+    </div>
+    ${VOLUNTARIOS ? `<div class="sobre-vol">
+      <p class="vol-titulo">Uma iniciativa dos Voluntários do Bosque da Mata</p>
       <a class="vol-link" href="${esc(VOLUNTARIOS.instagram)}" target="_blank" rel="noopener">${IC.insta}<span>Siga ${esc(VOLUNTARIOS.arroba)}</span></a>
-      <a class="vol-outros" href="${esc(VOLUNTARIOS.linktree)}" target="_blank" rel="noopener">Voluntários de outros bairros de Tijucas</a>`;
+      <a class="vol-outros" href="${esc(VOLUNTARIOS.linktree)}" target="_blank" rel="noopener">Voluntários de outros bairros de Tijucas</a>
+    </div>` : ""}`;
+    delete el.folhaCorpo.dataset.id;
+    el.folha.showModal();
   }
+  $("#topo-links").addEventListener("click", (e) => { if (e.target.closest("[data-sobre]")) abrirSobre(); });
 
   // ---------- início ----------
   const totalFones = CONTATOS.reduce((s, c) => s + c.t.length, 0);
