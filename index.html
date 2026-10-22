@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catálogo do Bosque</title>
+<meta name="description" content="Telefones de empreendedores que moram no Bosque da Mata e no BR Felice, em Tijucas/SC.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1d4d2b" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12301b" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-in">
+    <svg class="arvore" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="24" r="17" class="copa"/>
+      <circle cx="19" cy="29" r="10" class="copa"/>
+      <circle cx="45" cy="29" r="10" class="copa"/>
+      <path d="M32 58V30M32 40l-8-8M32 36l9-9M32 58c-4 0-9 2-12 4M32 58c4 0 9 2 12 4" class="tronco"/>
+    </svg>
+    <div class="topo-txt">
+      <h1>Catálogo do bairro</h1>
+      <p class="onde">Bosque da Mata e BR Felice · Tijucas/SC</p>
+    </div>
+    <button class="ic ic-claro" id="compartilhar-site" type="button" aria-label="Compartilhar o catálogo">
+      <svg viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="barra">
+  <div class="barra-in">
+    <label class="busca">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="q" type="search" placeholder="Do que você precisa?" autocomplete="off" enterkeyhint="search" aria-label="Buscar por serviço, nome ou número">
+      <button id="limpar" type="button" class="limpar" aria-label="Limpar busca" hidden>
+        <svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17"/></svg>
+      </button>
+    </label>
+    <nav class="atalhos" id="atalhos" aria-label="Ir para um tipo de serviço"></nav>
+  </div>
+</div>
+
+<main class="conteudo" id="conteudo"></main>
+
+<footer class="rodape">
+  <div class="voluntarios" id="voluntarios"></div>
+  <p>Contatos exclusivamente de empreendedores residentes no BR Felice e no Bosque da Mata.</p>
+  <p>Quer entrar no catálogo ou corrigir seu número? Mande no grupo do bairro.</p>
+  <p class="atualizado" id="atualizado"></p>
+</footer>
+
+<dialog class="folha" id="folha" aria-labelledby="folha-nome">
+  <div class="folha-topo">
+    <div class="folha-quem">
+      <h2 id="folha-nome" tabindex="-1" autofocus></h2>
+      <p class="folha-sub" id="folha-sub"></p>
+    </div>
+    <button class="ic" type="button" data-fechar aria-label="Fechar">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="folha-corpo" id="folha-corpo"></div>
+</dialog>
+
+<div class="aviso" id="aviso" role="status" hidden></div>
+
+<script src="contatos.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

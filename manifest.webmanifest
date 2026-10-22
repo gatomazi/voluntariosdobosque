@@ -1,0 +1,9 @@
+{
+  "name": "Catálogo do Bosque da Mata e BR Felice",
+  "short_name": "Catálogo",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f2f4ec",
+  "theme_color": "#1d4d2b",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
