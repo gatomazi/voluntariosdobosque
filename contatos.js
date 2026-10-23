@@ -36,6 +36,8 @@ window.VOLUNTARIOS = {
   instagram: "https://www.instagram.com/bosquedamatavoluntarios/",
   arroba: "@bosquedamatavoluntarios",
   linktree: "https://linktr.ee/tijucasvoluntarios",
+  // Quem quer entrar no catálogo ou corrigir o número chama este WhatsApp.
+  inclusao: "47991690618",
 };
 
 // Grupos usados nos filtros rápidos. A ordem aqui é a ordem dos botões.

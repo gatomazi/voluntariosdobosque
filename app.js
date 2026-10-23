@@ -14,7 +14,7 @@
   const $ = (s) => document.querySelector(s);
   const el = {
     q: $("#q"), limpar: $("#limpar"), atalhos: $("#atalhos"), conteudo: $("#conteudo"),
-    atualizado: $("#atualizado"), aviso: $("#aviso"),
+    atualizado: $("#atualizado"), entrar: $("#entrar"), aviso: $("#aviso"),
     folha: $("#folha"), folhaNome: $("#folha-nome"), folhaSub: $("#folha-sub"), folhaCorpo: $("#folha-corpo"),
   };
 
@@ -330,6 +330,15 @@
   });
 
   // ---------- sobre ----------
+  const INCLUSAO = VOLUNTARIOS && VOLUNTARIOS.inclusao;
+  const linkInclusao = INCLUSAO
+    ? `https://wa.me/55${INCLUSAO}?text=${encodeURIComponent("Olá! Moro no Bosque da Mata / BR Felice e quero colocar meu contato no catálogo do bairro.")}`
+    : "";
+  if (linkInclusao) {
+    el.entrar.innerHTML = `Quer entrar no catálogo? <a href="${linkInclusao}" target="_blank" rel="noopener">Chame no WhatsApp ${formatar(INCLUSAO)}</a>`;
+    el.entrar.hidden = false;
+  }
+
   $("#topo-links").innerHTML =
     `<button class="topo-link" type="button" data-sobre>${IC.info}Sobre o catálogo</button>` +
     (VOLUNTARIOS ? `<a class="topo-link" href="${esc(VOLUNTARIOS.instagram)}" target="_blank" rel="noopener">${IC.insta}Instagram</a>` : "");
@@ -339,7 +348,8 @@
     el.folhaSub.textContent = "Bosque da Mata e BR Felice · Tijucas/SC";
     el.folhaCorpo.innerHTML = `<div class="sobre">
       <p>Contatos exclusivamente de empreendedores residentes no BR Felice e no Bosque da Mata.</p>
-      <p><strong>Quer entrar no catálogo ou corrigir seu número?</strong> Mande no grupo do bairro.</p>
+      <p><strong>Quer entrar no catálogo ou corrigir seu número?</strong> ${linkInclusao ? `Chame no WhatsApp ${formatar(INCLUSAO)}.` : "Mande no grupo do bairro."}</p>
+      ${linkInclusao ? `<a class="btn btn-zap" href="${linkInclusao}" target="_blank" rel="noopener">${IC.zap}Quero entrar no catálogo</a>` : ""}
       <p class="sobre-data">${CONTATOS.length} contatos · lista de ${esc(ATUALIZADO_EM)}</p>
     </div>
     ${VOLUNTARIOS ? `<div class="sobre-vol">

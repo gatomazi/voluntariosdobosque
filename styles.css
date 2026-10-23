@@ -203,6 +203,8 @@ h1 { margin: 0; font: 800 26px/1.05 var(--f-titulo); letter-spacing: -.02em; tex
   font-size: 14px; color: var(--tinta-2); text-align: center; text-wrap: balance;
 }
 .rodape p { margin: 0 0 var(--e2); }
+.rodape .entrar a { color: var(--tinta); font-weight: 700; text-underline-offset: 3px; }
+.sobre .btn-zap { margin-bottom: var(--e4); }
 
 /* ---------- folha de ações ---------- */
 .folha {
